@@ -1,18 +1,22 @@
 import Foundation
 
 public class MKURLBuilder: MKURLBuilderProtocol {
+    
   public let tokenEncoder: MKTokenEncoder?
   public let connection: MKDatabaseConnection
   public let tokenManager: MKTokenManagerProtocol?
+  public let includeAPIToken: Bool
 
   public init(
     tokenEncoder: MKTokenEncoder?,
     connection: MKDatabaseConnection,
-    tokenManager: MKTokenManagerProtocol? = nil
+    tokenManager: MKTokenManagerProtocol? = nil,
+    includeAPIToken: Bool = true
   ) {
     self.tokenEncoder = tokenEncoder
     self.connection = connection
     self.tokenManager = tokenManager
+    self.includeAPIToken = includeAPIToken
   }
 
   public func url(withPathComponents pathComponents: [String]) throws -> URL {
@@ -36,7 +40,13 @@ public class MKURLBuilder: MKURLBuilderProtocol {
 
 public extension MKURLBuilder {
   var queryItems: [String: String] {
-    var parameters = ["ckAPIToken": connection.apiToken]
+      
+      var parameters: [String: String] = [:]
+      
+    if includeAPIToken {
+      parameters["ckAPIToken"] = connection.apiToken
+    }
+      
     if let webAuthenticationToken = tokenManager?.webAuthenticationToken,
        let tokenEncoder = tokenEncoder {
       parameters["ckWebAuthToken"] = tokenEncoder.encode(webAuthenticationToken)
