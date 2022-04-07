@@ -1,4 +1,4 @@
-public struct MKURLBuilderFactory {
+public struct MKURLBuilderFactory: MKURLBuilderFactoryProtocol {
   public init() {}
   public func builder(
     forConnection connection: MKDatabaseConnection,

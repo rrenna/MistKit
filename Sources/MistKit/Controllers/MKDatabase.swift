@@ -8,7 +8,7 @@ public struct MKDatabase<HttpClient: MKHttpClient> {
 
   public init(connection: MKDatabaseConnection,
               client: HttpClient,
-              factory: MKURLBuilderFactory? = nil,
+              factory: MKURLBuilderFactoryProtocol? = nil,
               requestConfigFactory: RequestConfigurationFactoryProtocol? = nil,
               resultSink: ResultSinkProtocol? = nil,
               tokenManager: MKTokenManagerProtocol? = nil) {
