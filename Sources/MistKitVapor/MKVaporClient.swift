@@ -24,11 +24,11 @@ public struct MKVaporClient: MKHttpClient {
 
 public struct MKVaporServerToServerClient: MKHttpClient {
     public let client: Client
-    public let headersForBodyDataBlock: ((Data)->([String:String]))?
+    public let headersForConfigurationBlock: ((RequestConfiguration)->([String:String]))?
 
-  public init(client: Client, headersForBodyDataBlock: ((Data)->([String:String]))? = nil) {
+  public init(client: Client, headersForConfigurationBlock: ((RequestConfiguration)->([String:String]))? = nil) {
     self.client = client
-    self.headersForBodyDataBlock = headersForBodyDataBlock
+    self.headersForConfigurationBlock = headersForConfigurationBlock
   }
 
   public func request(
@@ -38,7 +38,7 @@ public struct MKVaporServerToServerClient: MKHttpClient {
     clientRequest.url = URI(string: configuration.url.absoluteString)
     if let data = configuration.data {
         
-      let headers = headersForBodyDataBlock?(data) ?? [:]
+      let headers = headersForConfigurationBlock?(configuration) ?? [:]
       clientRequest.body = ByteBuffer(data: data)
       clientRequest.method = .POST
       clientRequest.headers.add(name: .contentType, value: "application/json")
