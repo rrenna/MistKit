@@ -21,9 +21,14 @@ public class MKURLBuilder: MKURLBuilderProtocol {
 
   public func url(withPathComponents pathComponents: [String]) throws -> URL {
     var url = connection.url
+    
     for path in pathComponents {
       url.appendPathComponent(path)
     }
+    
+    // If there's no query items return the above path
+    guard !queryItems.isEmpty else { return url }
+      
     let query = queryItems.map {
       [$0.key, $0.value].joined(separator: "=")
     }
