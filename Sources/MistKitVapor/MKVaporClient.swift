@@ -23,12 +23,12 @@ public struct MKVaporClient: MKHttpClient {
 }
 
 public struct MKVaporServerToServerClient: MKHttpClient {
-  public let client: Client
-  public let headers:[String:String]?
+    public let client: Client
+    public let onHeaderConstruction: ((ClientRequest)->())?
 
-  public init(client: Client, headers: [String:String]? = nil) {
+  public init(client: Client, onHeaderConstruction: ((ClientRequest)->())? = nil) {
     self.client = client
-    self.headers = headers
+    self.onHeaderConstruction = onHeaderConstruction
   }
 
   public func request(
@@ -40,7 +40,7 @@ public struct MKVaporServerToServerClient: MKHttpClient {
       clientRequest.body = ByteBuffer(data: data)
       clientRequest.method = .POST
       clientRequest.headers.add(name: .contentType, value: "application/json")
-      headers?.forEach({ clientRequest.headers.add(name: $0, value: $1) })
+      onHeaderConstruction?(clientRequest)
     }
     return MKVaporClientRequest(client: client, request: clientRequest)
   }
